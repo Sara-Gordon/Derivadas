@@ -1,7 +1,7 @@
 document.getElementById("derivative-form").addEventListener("submit", function(e) {
   e.preventDefault();
   
-  const rawInput = document.getElementById("function-input").value;
+  const rawInput = document.getElementById("function-input").value.trim();
   const stepsDiv = document.getElementById("steps");
   stepsDiv.innerHTML = "";
 
@@ -11,20 +11,20 @@ document.getElementById("derivative-form").addEventListener("submit", function(e
   }
 
   try {
-    // 👉 Convertir lo escrito a formato math.js
+    // 🧠 Reglas de transformación amigables para Sarita
     let input = rawInput
-      .replace(/([a-zA-Z])(\d+)/g, '$1^$2')         // x2 -> x^2
-      .replace(/ln\(/gi, 'log(')                    // ln(x) -> log(x)
-      .replace(/raiz\(/gi, 'sqrt(')                 // raiz(x) -> sqrt(x)
-      .replace(/([a-df-zA-DF-Z])x/gi, '$1*x')       // ax -> a*x
-      .replace(/^ex$/, 'exp(x)')                    // ex -> exp(x)
-      .replace(/([^a-zA-Z])ex/g, '$1exp(x)');       // +ex -> +exp(x)
+      .replace(/(\b[a-z])(\d+)/gi, '$1^$2')             // x2 → x^2, a3 → a^3
+      .replace(/ln\(/gi, 'log(')                        // ln(x) → log(x)
+      .replace(/raiz\(/gi, 'sqrt(')                     // raiz(x) → sqrt(x)
+      .replace(/([0-9])([a-zA-Z])/g, '$1*$2')           // 3x → 3*x
+      .replace(/([a-zA-Z])([0-9])/g, '$1^$2')           // x2 → x^2 (si aún no lo hizo)
+      .replace(/e\^x/gi, 'exp(x)');                     // e^x → exp(x)
 
     const expr = math.parse(input);
     const simplified = expr.simplify();
     const derivative = math.derivative(simplified, 'x');
 
-    // Mostrar pasos
+    // Mostrar pasos como en tus hojas
     stepsDiv.innerHTML = `
       <p>1️⃣ Definición del límite de la derivada:</p>
       <p>f'(x) = lim (Δx→0) [ f(x + Δx) - f(x) ] / Δx</p>
@@ -35,7 +35,7 @@ document.getElementById("derivative-form").addEventListener("submit", function(e
       <p><strong>✅ Resultado final: f'(x) = ${derivative.toTex()}</strong></p>
     `;
 
-    // Graficar
+    // Gráfica con Desmos
     const elt = document.getElementById('graph');
     elt.innerHTML = "";
     const calculator = Desmos.GraphingCalculator(elt);
@@ -45,8 +45,14 @@ document.getElementById("derivative-form").addEventListener("submit", function(e
   } catch (error) {
     console.error(error);
     stepsDiv.innerHTML = `
-      <p>⚠️ Error al procesar la función. Intenta escribirla así: x2, sin(x), ex, raiz(x)</p>
-      <p>Ejemplos válidos: <code>x2</code>, <code>raiz(x)</code>, <code>1/x</code>, <code>ex</code>, <code>ln(x)</code>, <code>sin(x)</code></p>
+      <p>⚠️ Error al procesar la función.</p>
+      <p>Asegúrate de escribir funciones como:</p>
+      <ul>
+        <li><code>x2</code> → se interpreta como <code>x^2</code></li>
+        <li><code>e^x</code> → se interpreta como <code>exp(x)</code></li>
+        <li><code>raiz(x)</code> → se interpreta como <code>sqrt(x)</code></li>
+        <li><code>ln(x)</code> → se interpreta como <code>log(x)</code></li>
+      </ul>
     `;
   }
 });
