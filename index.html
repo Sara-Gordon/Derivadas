@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Derivadas Paso a Paso</title>
+  <link rel="stylesheet" href="style.css"/>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjs/11.11.1/math.min.js"></script>
+  <script src="https://www.desmos.com/api/v1.6/calculator.js?apiKey=YOUR_API_KEY"></script>
+</head>
+<body>
+  <header>
+    <h1>📘 Derivadas Paso a Paso</h1>
+    <p>Escribe tu función y observa cómo se deriva con el método largo</p>
+  </header>
+
+  <main>
+    <form id="derivative-form">
+      <label for="function-input">Función f(x):</label>
+      <input type="text" id="function-input" placeholder="Ej: x^2, sqrt(x), sin(x), 1/x"/>
+      <button type="submit">Derivar</button>
+    </form>
+
+    <section id="steps"></section>
+
+    <div id="graph"></div>
+  </main>
+
+  <footer>
+    <p>🌼 Página creada por Sarita 🌼</p>
+  </footer>
+
+  <script src="script.js"></script>
+</body>
+</html>
